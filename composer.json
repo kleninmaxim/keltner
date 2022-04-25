@@ -1,0 +1,13 @@
+{
+    "require": {
+        "textalk/websocket": "^1.5",
+        "guzzlehttp/guzzle": "^7.4",
+        "ext-mbstring": "*"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "Src\\" : "src/"
+        }
+    }
+}

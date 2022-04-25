@@ -1,0 +1,6 @@
+/.idea
+/storage/cache/*
+/storage/logs/*
+/vendor
+/config/*
+/tests/test.php
