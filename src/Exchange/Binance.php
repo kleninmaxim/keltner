@@ -5,7 +5,7 @@ namespace Src\Exchange;
 class Binance extends Exchange
 {
 
-    use Websocket\Binance;
+    use Websocket\Binance, \Src\Cache\Binance;
 
     protected string $base_url = 'https://api.binance.com';
 
