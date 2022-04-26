@@ -11,4 +11,3 @@ const CACHE_PATH = __DIR__ . '/storage/cache/';
 const LOGS_PATH = __DIR__ . '/storage/logs/';
 
 Config::save();
-
