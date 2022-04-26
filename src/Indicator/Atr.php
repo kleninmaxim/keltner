@@ -33,7 +33,7 @@ class Atr extends Indicator
 
         }
 
-        foreach ((new Rma($this->atr_period, null))->get($trueRanges) as $key => $rma)
+        foreach ((new Rma($this->atr_period, ''))->get($trueRanges) as $key => $rma)
             $atrs[$key][$this->name] = $rma['rma'];
 
         return $atrs ?? [];

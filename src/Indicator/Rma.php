@@ -21,7 +21,7 @@ class Rma extends Indicator
     public function get($sources): array
     {
 
-        if ($this->source != null)
+        if (!empty($this->source))
             $sources = array_column($sources, $this->source);
 
         foreach ($sources as $key => $source) {

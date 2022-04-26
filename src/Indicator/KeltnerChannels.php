@@ -42,7 +42,7 @@ class KeltnerChannels extends Indicator
                 $sources
             );
 
-            $rangema = array_column((new Rma($this->length, null))->get($rma_sources), 'rma');
+            $rangema = array_column((new Rma($this->length, ''))->get($rma_sources), 'rma');
 
         }
 
