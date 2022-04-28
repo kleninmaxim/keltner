@@ -29,7 +29,7 @@ class Binance extends Exchange
 
         return $this->sendPrivateRequest(
             'get',
-            '/fapi/v1/account',
+            $this->base_url_futures . '/fapi/v1/account',
             proofs: ['assets', 'updateTime', 'availableBalance']
         );
 
@@ -74,7 +74,7 @@ class Binance extends Exchange
 
         return $this->sendPrivateRequest(
             'post',
-            '/fapi/v1/order',
+            $this->base_url_futures . '/fapi/v1/order',
             $get_params,
             ['orderId', 'symbol']
         );
@@ -89,7 +89,7 @@ class Binance extends Exchange
 
         return $this->sendPrivateRequest(
             'get',
-            '/fapi/v2/positionRisk',
+            $this->base_url_futures . '/fapi/v2/positionRisk',
             $get_params ?? [],
             proofs: ['symbol', 'notional']
         );
@@ -106,7 +106,7 @@ class Binance extends Exchange
 
         return $this->sendPrivateRequest(
             'post',
-            '/fapi/v1/leverage',
+            $this->base_url_futures . '/fapi/v1/leverage',
             $get_params,
             proofs: ['leverage', 'symbol']
         );
