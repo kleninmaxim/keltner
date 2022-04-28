@@ -13,10 +13,7 @@ class Cache
 
         $data = $callback();
 
-        if (is_callable($seconds))
-            $seconds = $seconds();
-
-        if (self::set($data, $key, $seconds))
+        if (self::set($data, $key, is_callable($seconds) ? $seconds() : $seconds))
             return $data;
 
         return false;
