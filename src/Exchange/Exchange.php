@@ -8,13 +8,11 @@ use Src\Log;
 class Exchange
 {
 
-    protected string $base_url; //base url
-
     //method to do a request and proof correct answer
     protected function request(string $method, string $url, array $query = [], array $header = [], array $proofs = []): array
     {
 
-        $request = Http::$method($this->base_url . $url, $query, $header);
+        $request = Http::$method($url, $query, $header);
 
         if (is_array($request))
             return $this->proofRequest($request, $proofs);

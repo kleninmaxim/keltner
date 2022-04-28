@@ -11,6 +11,17 @@ trait Binance
 
     private Client $client;
     private string $base_websocket_url = 'wss://stream.binance.com:9443/ws/';
+    private string $base_websocket_url_futures = 'wss://fstream.binance.com/ws/';
+
+    public function connectKlineStreamFutures(string $symbol, string $interval): void
+    {
+
+        $this->client = new Client(
+            $this->base_websocket_url_futures . mb_strtolower($symbol) . '@kline_' . $interval,
+            ['timeout' => 100]
+        );
+
+    }
 
     public function connectKlineStream(string $symbol, string $interval): void
     {
