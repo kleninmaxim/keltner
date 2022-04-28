@@ -11,10 +11,10 @@ class Cache
         if ($cache = self::get($key))
             return $cache;
 
+        $data = $callback();
+
         if (is_callable($seconds))
             $seconds = $seconds();
-
-        $data = $callback();
 
         if (self::set($data, $key, $seconds))
             return $data;
