@@ -4,6 +4,7 @@ use Src\Algo\KeltnerTrade;
 use Src\Config;
 use Src\Exchange\Binance;
 use Src\Exchange\KlineInterval;
+use Src\Telegram;
 
 require_once __DIR__ . '/index.php';
 
@@ -14,6 +15,13 @@ $asset = 'BTCUSDT';
 $precisions = ['amount_precision' => 3, 'price_precision' => 2];
 
 $binance_config = Config::get('binance');
+
+$telegram_config = Config::get('telegram');
+
+$telegram = new Telegram(
+    $telegram_config['telegram_chats']['rocket']['token'],
+    [$telegram_config['telegram_users']['my']['id']]
+);
 
 $binance = new Binance($binance_config[$account]['api_public'], $binance_config[$account]['api_private']);
 
@@ -41,11 +49,17 @@ while (true) {
 
         if ($position['side'] == 'buy' && $current_candle['close'] >= $position['price']) {
 
-            $order = $binance->createOrderFutures(
-                'BTCUSDT',
-                'BUY',
-                'MARKET',
-                $keltner->getAmount($binance, $precisions, $position['price'])
+//            $order = $binance->createOrderFutures(
+//                'BTCUSDT',
+//                'BUY',
+//                'MARKET',
+//                $keltner->getAmount($binance, $precisions, $position['price'])
+//            );
+
+            $telegram->send(
+                '*Keltner*' . "\n" .
+                'Position: *BUY*' . "\n" .
+                'Price: *' . $current_candle['close'] . '*' . "\n"
             );
 
             $position = [
@@ -56,11 +70,17 @@ while (true) {
 
         } elseif ($position['side'] == 'sell' && $current_candle['close'] <= $position['price']) {
 
-            $order = $binance->createOrderFutures(
-                'BTCUSDT',
-                'SELL',
-                'MARKET',
-                $keltner->getAmount($binance, $precisions, $position['price'])
+//            $order = $binance->createOrderFutures(
+//                'BTCUSDT',
+//                'SELL',
+//                'MARKET',
+//                $keltner->getAmount($binance, $precisions, $position['price'])
+//            );
+
+            $telegram->send(
+                '*Keltner*' . "\n" .
+                'Position: *SELL*' . "\n" .
+                'Price: *' . $current_candle['close'] . '*' . "\n"
             );
 
             $position = [
@@ -72,5 +92,7 @@ while (true) {
         }
 
     }
+
+    echo '[' . date('Y-m-d H:i:s') . '] Run. Price is: ' . $current_candle['close'] . PHP_EOL;
 
 }
