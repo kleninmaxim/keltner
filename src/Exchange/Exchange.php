@@ -41,6 +41,18 @@ class Exchange
         if (count(array_intersect_key(array_flip($keys), $request)) === count($keys))
             return $request;
 
+        Log::error(
+            'error',
+            print_r(
+                [
+                    'message' => 'Not proof request',
+                    '$request' => $request,
+                    '$keys' => $keys
+                ],
+                true
+            )
+        );
+
         return [];
 
     }

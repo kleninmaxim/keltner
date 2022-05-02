@@ -91,7 +91,7 @@ class Binance extends Exchange
             'get',
             $this->base_url_futures . '/fapi/v2/positionRisk',
             $get_params ?? [],
-            proofs: ['symbol', 'notional']
+            proofs: [0]
         );
 
     }
