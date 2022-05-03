@@ -1,5 +1,9 @@
 <?php
 
+ini_set('log_errors', 1);
+
+ini_set('error_log', __DIR__ . '/storage/logs/error.log');
+
 use Src\Config;
 
 require __DIR__ . '/vendor/autoload.php';
