@@ -93,6 +93,12 @@ while (true) {
 
     }
 
-    echo '[' . date('Y-m-d H:i:s') . '] Run. Price is: ' . $current_candle['close'] . PHP_EOL;
+    echo
+        '[' . date('Y-m-d H:i:s') .
+        '] Current price is: ' . $current_candle['close'] .
+        '. Position: ' . $position['act'] .
+        '. Side: ' . $position['side'] .
+        '. Price: ' . $position['price'] .
+        PHP_EOL;
 
 }
