@@ -18,12 +18,9 @@ $binance_config = Config::get('binance');
 
 $telegram_config = Config::get('telegram');
 
-foreach ($telegram_config['telegram_users'] as $telegram_user)
-    $api_users[] = $telegram_user['id'];
-
 $telegram = new Telegram(
     $telegram_config['telegram_chats']['rocket']['token'],
-    $api_users ?? []
+    array_column($telegram_config['telegram_users'], 'id')
 );
 
 $binance = new Binance($binance_config[$account]['api_public'], $binance_config[$account]['api_private']);
