@@ -49,7 +49,7 @@ trait Binance
 
         $time_interval = KlineInterval::timeframeInSeconds($interval);
 
-        $seconds = $time_interval - time() % $time_interval - 1;
+        $seconds = $time_interval - time() % $time_interval;
 
         return ($seconds < 86400) ? $seconds : 86400;
 
