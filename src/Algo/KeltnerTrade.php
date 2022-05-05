@@ -8,12 +8,20 @@ use Src\Indicator\KeltnerChannels;
 class KeltnerTrade
 {
 
-    public function getKlines(array $candles): array
+    public function getKlines(array $candles, bool $atr): array
     {
 
         $candles = array_values($candles);
 
-        (new KeltnerChannels(22, 3, 'ATR', 32))->put($candles);
+        if ($atr) {
+
+            (new KeltnerChannels(22, 3, 'ATR', 32))->put($candles);
+
+        } else {
+
+            (new KeltnerChannels(8, 2, 'R'))->put($candles);
+
+        }
 
         return array_values(
             array_reverse(

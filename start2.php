@@ -31,7 +31,7 @@ $keltner = new KeltnerTrade();
 
 while (true) {
 
-    $candles = $keltner->getKlines($binance->fetchKlinesFuturesCache($asset, KlineInterval::HOUR), true);
+    $candles = $keltner->getKlines($binance->fetchKlinesFuturesCache($asset, KlineInterval::HOUR), false);
 
     $current_candle = $binance->receive();
 
