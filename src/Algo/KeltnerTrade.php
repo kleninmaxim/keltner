@@ -26,8 +26,10 @@ class KeltnerTrade
 
     }
 
-    public function checkPositions(array $candles, array &$position): array
+    public function checkPositions(array $candles): array
     {
+
+        $position = ['act' => ''];
 
         foreach (array_reverse($candles) as $candle) {
 

@@ -29,8 +29,6 @@ $binance->connectKlineStreamFutures($asset, KlineInterval::HOUR);
 
 $keltner = new KeltnerTrade();
 
-$position = ['act' => ''];
-
 while (true) {
 
     $candles = $keltner->getKlines($binance->fetchKlinesFuturesCache($asset, KlineInterval::HOUR));
@@ -43,7 +41,7 @@ while (true) {
         'high' => $current_candle['k']['h']
     ];
 
-    $keltner->checkPositions($candles, $position);
+    $position = $keltner->checkPositions($candles);
 
     if ($position['act'] == 'wait') {
 
@@ -68,6 +66,8 @@ while (true) {
                 'price' => $position['price']
             ];
 
+            sleep(60*60);
+
         } elseif ($position['side'] == 'sell' && $current_candle['close'] <= $position['price']) {
 
 //            $order = $binance->createOrderFutures(
@@ -88,6 +88,8 @@ while (true) {
                 'side' => $position['side'],
                 'price' => $position['price']
             ];
+
+            sleep(60*60);
 
         }
 
