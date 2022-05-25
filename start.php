@@ -2,6 +2,7 @@
 
 use Src\Algo\KeltnerTrade;
 use Src\Config;
+use Src\DiscreteTime;
 use Src\Exchange\Binance;
 use Src\Exchange\KlineInterval;
 use Src\Telegram;
@@ -27,25 +28,31 @@ $binance = new Binance($binance_config[$account]['api_public'], $binance_config[
 
 $binance->connectKlineStreamFutures($asset, KlineInterval::HOUR);
 
+$discret_time = new DiscreteTime();
+
 $keltner = new KeltnerTrade();
 
 while (true) {
 
-    $candles = $keltner->getKlines($binance->fetchKlinesFuturesCache($asset, KlineInterval::HOUR), true);
+    if ($cache_candles = $binance->fetchKlinesFuturesCache($asset, KlineInterval::HOUR)) {
 
-    $current_candle = $binance->receive();
+        $candles = $keltner->getKlines($cache_candles, true);
 
-    $current_candle = [
-        'close' => $current_candle['k']['c'],
-        'low' => $current_candle['k']['l'],
-        'high' => $current_candle['k']['h']
-    ];
+        $current_candle = $binance->receive();
 
-    $position = $keltner->checkPositions($candles);
+        if ($current_candle && isset($current_candle['k']['c'])) {
 
-    if ($position['act'] == 'wait') {
+            $current_candle = [
+                'close' => $current_candle['k']['c'],
+                'low' => $current_candle['k']['l'],
+                'high' => $current_candle['k']['h']
+            ];
 
-        if ($position['side'] == 'buy' && $current_candle['close'] >= $position['price']) {
+            $position = $keltner->checkPositions($candles);
+
+            if ($position['act'] == 'wait') {
+
+                if ($position['side'] == 'buy' && $current_candle['close'] >= $position['price']) {
 
 //            $order = $binance->createOrderFutures(
 //                'BTCUSDT',
@@ -54,21 +61,21 @@ while (true) {
 //                $keltner->getAmount($binance, $precisions, $position['price'])
 //            );
 
-            $telegram->send(
-                'S1H1Y1' . "\n" .
-                'LONG | x1-10 | BTCUSDT' . "\n" .
-                'Entry Price: ' . $current_candle['close'] . "\n"
-            );
+                    $telegram->send(
+                        'S1H1Y1' . "\n" .
+                        'LONG | x1-10 | BTCUSDT' . "\n" .
+                        'Entry Price: ' . $current_candle['close'] . "\n"
+                    );
 
-            $position = [
-                'act' => 'in_position',
-                'side' => $position['side'],
-                'price' => $position['price']
-            ];
+                    $position = [
+                        'act' => 'in_position',
+                        'side' => $position['side'],
+                        'price' => $position['price']
+                    ];
 
-            sleep(60*60);
+                    sleep(60 * 60);
 
-        } elseif ($position['side'] == 'sell' && $current_candle['close'] <= $position['price']) {
+                } elseif ($position['side'] == 'sell' && $current_candle['close'] <= $position['price']) {
 
 //            $order = $binance->createOrderFutures(
 //                'BTCUSDT',
@@ -77,30 +84,56 @@ while (true) {
 //                $keltner->getAmount($binance, $precisions, $position['price'])
 //            );
 
-            $telegram->send(
-                'S1H1Y1' . "\n" .
-                'SHORT | x1-10 | BTCUSDT' . "\n" .
-                'Entry Price: ' . $current_candle['close'] . "\n"
-            );
+                    $telegram->send(
+                        'S1H1Y1' . "\n" .
+                        'SHORT | x1-10 | BTCUSDT' . "\n" .
+                        'Entry Price: ' . $current_candle['close'] . "\n"
+                    );
 
-            $position = [
-                'act' => 'in_position',
-                'side' => $position['side'],
-                'price' => $position['price']
-            ];
+                    $position = [
+                        'act' => 'in_position',
+                        'side' => $position['side'],
+                        'price' => $position['price']
+                    ];
 
-            sleep(60*60);
+                    sleep(60 * 60);
+
+                }
+
+            }
+
+            if ($discret_time->proof()) {
+
+                echo
+                    '[' . date('Y-m-d H:i:s') .
+                    '] 22 3 Current price is: ' . $current_candle['close'] .
+                    '. Position: ' . $position['act'] .
+                    '. Side: ' . $position['side'] .
+                    '. Price: ' . $position['price'] .
+                    PHP_EOL;
+
+            }
+
+        } else {
+
+            echo '[' . date('Y-m-d H:i:s') . '] Can not get candles from websocket' . PHP_EOL;
+
+            $telegram->send('[ERROR] Can not get candles from websocket' . "\n");
+
+            $binance->connectKlineStreamFutures($asset, KlineInterval::HOUR);
+
+            sleep(10);
 
         }
 
-    }
+    } else {
 
-    echo
-        '[' . date('Y-m-d H:i:s') .
-        '] Current price is: ' . $current_candle['close'] .
-        '. Position: ' . $position['act'] .
-        '. Side: ' . $position['side'] .
-        '. Price: ' . $position['price'] .
-        PHP_EOL;
+        echo '[' . date('Y-m-d H:i:s') . '] Candles from cache is bool' . PHP_EOL;
+
+        $telegram->send('[ERROR] Candles from cache is bool' . "\n");
+
+        sleep(10);
+
+    }
 
 }
