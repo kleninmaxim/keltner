@@ -62,7 +62,7 @@ while (true) {
 //            );
 
                     $telegram->send(
-                        'S1H1Y1' . "\n" .
+                        'S2H1Y1' . "\n" .
                         'LONG | x1-10 | BTCUSDT' . "\n" .
                         'Entry Price: ' . $current_candle['close'] . "\n"
                     );
@@ -85,7 +85,7 @@ while (true) {
 //            );
 
                     $telegram->send(
-                        'S1H1Y1' . "\n" .
+                        'S2H1Y1' . "\n" .
                         'SHORT | x1-10 | BTCUSDT' . "\n" .
                         'Entry Price: ' . $current_candle['close'] . "\n"
                     );
