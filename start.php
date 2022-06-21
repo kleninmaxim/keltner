@@ -24,6 +24,11 @@ $telegram = new Telegram(
     array_column($telegram_config['telegram_users'], 'id')
 );
 
+$telegram_debug = new Telegram(
+    $telegram_config['telegram_chats']['rocket']['token'],
+    [$telegram_config['telegram_users']['my']['id']]
+);
+
 $binance = new Binance($binance_config[$account]['api_public'], $binance_config[$account]['api_private']);
 
 $binance->connectKlineStreamFutures($asset, KlineInterval::HOUR);
@@ -118,7 +123,7 @@ while (true) {
 
             echo '[' . date('Y-m-d H:i:s') . '] Can not get candles from websocket' . PHP_EOL;
 
-            $telegram->send('[ERROR] Can not get candles from websocket' . "\n");
+            $telegram_debug->send('[ERROR] Can not get candles from websocket' . "\n");
 
             $binance->connectKlineStreamFutures($asset, KlineInterval::HOUR);
 
@@ -130,7 +135,7 @@ while (true) {
 
         echo '[' . date('Y-m-d H:i:s') . '] Candles from cache is bool' . PHP_EOL;
 
-        $telegram->send('[ERROR] Candles from cache is bool' . "\n");
+        $telegram_debug->send('[ERROR] Candles from cache is bool' . "\n");
 
         sleep(10);
 
