@@ -37,6 +37,8 @@ $discret_time = new DiscreteTime();
 
 $keltner = new KeltnerTrade();
 
+$telegram->send('S2H1Y1 [START]' . "\n");
+
 while (true) {
 
     if ($cache_candles = $binance->fetchKlinesFuturesCache($asset, KlineInterval::HOUR)) {
