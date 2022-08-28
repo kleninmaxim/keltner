@@ -3,7 +3,7 @@
 namespace Src\Cache;
 
 use Src\Cache;
-use Src\Exchange\KlineInterval;
+use Src\Exchange\Binance\KlineInterval;
 
 trait Binance
 {

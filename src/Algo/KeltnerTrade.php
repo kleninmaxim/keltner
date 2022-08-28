@@ -2,7 +2,7 @@
 
 namespace Src\Algo;
 
-use Src\Exchange\Binance;
+use Src\Exchange\Binance\Binance;
 use Src\Indicator\KeltnerChannels;
 
 class KeltnerTrade

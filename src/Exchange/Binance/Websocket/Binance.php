@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Exchange\Websocket;
+namespace Src\Exchange\Binance\Websocket;
 
 use Src\Log;
 use Throwable;

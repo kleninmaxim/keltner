@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Exchange;
+namespace Src\Exchange\Binance;
 
 use Src\Http;
 use Src\Log;

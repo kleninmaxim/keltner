@@ -1,6 +1,6 @@
 <?php
 
-namespace Src\Exchange;
+namespace Src\Exchange\Binance;
 
 class KlineInterval
 {

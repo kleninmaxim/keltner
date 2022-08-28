@@ -3,8 +3,8 @@
 use Src\Algo\KeltnerTrade;
 use Src\Config;
 use Src\DiscreteTime;
-use Src\Exchange\Binance;
-use Src\Exchange\KlineInterval;
+use Src\Exchange\Binance\Binance;
+use Src\Exchange\Binance\KlineInterval;
 use Src\Telegram;
 
 require_once __DIR__ . '/index.php';
