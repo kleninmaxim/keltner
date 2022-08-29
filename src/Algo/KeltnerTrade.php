@@ -2,11 +2,79 @@
 
 namespace Src\Algo;
 
+use Src\Config;
 use Src\Exchange\Binance\Binance;
+use Src\Exchange\Bybit\Bybit;
 use Src\Indicator\KeltnerChannels;
 
 class KeltnerTrade
 {
+
+    public function bybitTrade(string $side, float $price, int $leverage = 10)
+    {
+
+        if (!isset($this->bybit)) {
+
+            $bybit_config = Config::get('bybit')['my'];
+
+            $this->bybit = new Bybit($bybit_config['api_public'], $bybit_config['api_private']);
+
+        }
+
+        if ($position = $this->bybit->getMyPositions('BTCUSDT')) {
+
+            $long_size = $position['result'][0]['size'];
+
+            if ($long_size != 0) {
+
+                $cansel_order = $this->bybit->createOrder('BTCUSDT', 'Market', 'Sell', $long_size);
+
+                echo '[' . date('Y-m-d H:i:s') . '] Close order. Side: ' . $long_size . PHP_EOL;
+
+            }
+
+            $short_size = $position['result'][1]['size'];
+
+            if ($short_size != 0) {
+
+                $cansel_order = $this->bybit->createOrder('BTCUSDT', 'Market', 'Buy', $short_size);
+
+                echo '[' . date('Y-m-d H:i:s') . '] Close order. Side: ' . $short_size . PHP_EOL;
+
+            }
+
+            if ($position['result'][0]['leverage'] != $leverage || $position['result'][1]['leverage'] != $leverage) {
+
+                $set_leverage = $this->bybit->setLeverage('BTCUSDT', $leverage, $leverage);
+
+                echo '[' . date('Y-m-d H:i:s') . '] Set leverage: ' . $leverage . PHP_EOL;
+
+            }
+
+            if ($balance = $this->bybit->getBalance()) {
+
+                $amount = round($balance['result']['USDT']['available_balance'] / $price, 3);
+
+                if (
+                    $new_position = $this->bybit->createOrder(
+                        'BTCUSDT',
+                        'Market',
+                        $side,
+                        $amount,
+                        false,
+                        false
+                    )
+                ) {
+
+                    echo '[' . date('Y-m-d H:i:s') . '] New position: ' . $amount . PHP_EOL;
+
+                }
+
+            }
+
+        }
+
+    }
 
     public function getKlines(array $candles, bool $atr): array
     {

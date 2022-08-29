@@ -68,6 +68,8 @@ while (true) {
 //                $keltner->getAmount($binance, $precisions, $position['price'])
 //            );
 
+                    $keltner->bybitTrade('Buy', $current_candle['close']);
+
                     $telegram->send(
                         'S2H1Y1' . "\n" .
                         'LONG | x1-10 | BTCUSDT' . "\n" .
@@ -90,6 +92,8 @@ while (true) {
 //                'MARKET',
 //                $keltner->getAmount($binance, $precisions, $position['price'])
 //            );
+
+                    $keltner->bybitTrade('Sell', $current_candle['close']);
 
                     $telegram->send(
                         'S2H1Y1' . "\n" .
